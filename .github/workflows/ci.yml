@@ -1,12 +1,12 @@
-name: Hello Workflow
-
-on: [push]
-
-jobs:
-  hello-job:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Hello Action
-        uses: tiriana/add-jira-link-to-pr@RADEK-234-test
-        with:
-          name: "Radek"
+name: 'Hello Action'
+description: 'This action prints a greeting message.'
+inputs:
+  name:
+    description: 'Name to greet'
+    required: true
+runs:
+  using: 'composite'
+  shell: bash   # Specify the shell environment as bash
+  steps:
+    - run: |
+        echo "Hello ${{ inputs.name }}!"
