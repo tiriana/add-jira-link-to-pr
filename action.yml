@@ -29,13 +29,15 @@ runs:
         if [ -z "$JIRA_KEY" ]; then
           echo "⚠️ JIRA key not found in PR title or branch name."
         fi
-        JIRA_KEY=$(echo $JIRA_KEY | tr '[:lower:]' '[:upper:]')
+        JIRA_KEY=$(echo "$JIRA_KEY" | tr '[:lower:]' '[:upper:]')
         echo "Extracted JIRA Key: $JIRA_KEY"
         echo "JIRA_KEY=$JIRA_KEY" >> $GITHUB_ENV
       shell: bash
 
     - name: Add or Update JIRA Link to PR
+      if: success()
       run: |
+        JIRA_KEY=$JIRA_KEY
         if [ -z "$JIRA_KEY" ]; then
           echo "JIRA_KEY not set. Exiting..."
           exit 0
@@ -52,7 +54,7 @@ runs:
           echo "COMMENT_ID is empty. Creating new comment."
           gh pr comment 1 -b "$COMMENT_BODY"
         else
-          UPDATE_URL="https://api.github.com/repos/tiriana/add-jira-link-to-pr/issues/comments/$COMMENT_ID"
+          UPDATE_URL="https://api.github.com/repos/${{ github.repository }}/issues/comments/$COMMENT_ID"
           echo "Constructed UPDATE_URL: $UPDATE_URL"
           curl -s -H "$AUTH_HEADER" -H "Content-Type: application/json" -X PATCH -d "$JSON_PAYLOAD" $UPDATE_URL
         fi
