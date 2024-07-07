@@ -16,6 +16,7 @@ runs:
           echo "PR opened by dependabot. Exiting..."
           exit 0
         fi
+      shell: bash
 
     - name: Extract JIRA Key
       id: extract-jira-key
@@ -31,6 +32,7 @@ runs:
         JIRA_KEY=$(echo $JIRA_KEY | tr '[:lower:]' '[:upper:]')
         echo "Extracted JIRA Key: $JIRA_KEY"
         echo "JIRA_KEY=$JIRA_KEY" >> $GITHUB_ENV
+      shell: bash
 
     - name: Add or Update JIRA Link to PR
       run: |
@@ -42,7 +44,7 @@ runs:
         JIRA_LINK="${{ inputs.jira-base-url }}/browse/$JIRA_KEY_URL"
         COMMENT_BODY="🔗 Link to JIRA: [$JIRA_KEY_URL]($JIRA_LINK) <sup title='Note: The JIRA link reflects the current (or previous) PR title or the branch name.'>ⓘ</sup>"
         COMMENTS_URL="${{ github.event.pull_request.comments_url }}"
-        AUTH_HEADER="Authorization: token ${{ secrets.GITHUB_TOKEN }}"
+        AUTH_HEADER="Authorization: token ${{ github.token }}"
         COMMENT_ID=$(curl -s -H "$AUTH_HEADER" $COMMENTS_URL | jq '.[] | select(.body | contains("🔗 Link to JIRA")) | .id')
         echo "Identified COMMENT_ID: $COMMENT_ID"
         JSON_PAYLOAD=$(jq --arg comment "$COMMENT_BODY" '. | {"body": $comment}' <<< "{}")
@@ -52,3 +54,4 @@ runs:
           UPDATE_URL="https://api.github.com/repos/${{ github.repository }}/issues/comments/$COMMENT_ID"
           echo "Constructed UPDATE_URL: $UPDATE_URL"
           curl -s -H "$AUTH_HEADER" -H "Content-Type: application/json" -X PATCH -d "$JSON_PAYLOAD" $UPDATE_URL
+      shell: bash
