@@ -1,0 +1,17 @@
+
+name: Add JIRA Link to PR
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - edited
+
+jobs:
+  add-jira-link:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: tiriana/add-jira-link-to-pr@v1
+        with:
+          jira-base-url: 'https://my-company.atlassian.net'
