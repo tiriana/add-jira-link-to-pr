@@ -1,17 +1,12 @@
+name: Hello Workflow
 
-name: Add JIRA Link to PR
-
-on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - edited
+on: [push]
 
 jobs:
-  add-jira-link:
+  hello-job:
     runs-on: ubuntu-latest
     steps:
-      - uses: tiriana/add-jira-link-to-pr@v1
+      - name: Hello Action
+        uses: tiriana/add-jira-link-to-pr@RADEK-234-test
         with:
-          jira-base-url: 'https://my-company.atlassian.net'
+          name: "Radek"  # Replace with the name you want to greet
