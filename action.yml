@@ -1,13 +1,24 @@
-name: 'Hello Action'
-description: 'This action prints a greeting message.'
+name: 'Add Comment with Personalized Message'
+description: 'This action adds a comment with a personalized message.'
 inputs:
   name:
-    description: 'Name to greet'
+    description: 'Name to personalize the message'
+    required: true
+  time:
+    description: 'Human-readable time in HH:MM:SS format'
     required: true
 runs:
   using: 'composite'
   steps:
-    - name: Greet
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Add Comment
+      if: success()
       run: |
-        echo "Hello ${{ inputs.name }}!"
-      shell: bash  # Specify the shell environment here
+        NAME="${{ inputs.name }}"
+        TIME="${{ inputs.time }}"
+        COMMENT="Hello $NAME at $TIME!"
+        COMMENTS_URL="${{ github.event.pull_request.comments_url }}"
+        AUTH_HEADER="Authorization: token ${{ github.token }}"
+        curl -sS -X POST -H "Content-Type: application/json" -H "$AUTH_HEADER" -d "{\"body\":\"$COMMENT\"}" $COMMENTS_URL
