@@ -14,4 +14,4 @@ jobs:
     steps:
       - uses: tiriana/add-jira-link-to-pr@v1.0.0
         with:
-          jira-base-url: 'https://my-company-1.atlassian.net'
+          jira-base-url: 'https://my-company-2.atlassian.net'
