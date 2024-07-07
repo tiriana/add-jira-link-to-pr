@@ -6,7 +6,8 @@ inputs:
     required: true
 runs:
   using: 'composite'
-  shell: bash   # Specify the shell environment as bash
   steps:
-    - run: |
+    - name: Greet
+      run: |
         echo "Hello ${{ inputs.name }}!"
+      shell: bash  # Specify the shell environment here
