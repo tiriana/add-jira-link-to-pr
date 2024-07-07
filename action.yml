@@ -49,9 +49,11 @@ runs:
         echo "Identified COMMENT_ID: $COMMENT_ID"
         JSON_PAYLOAD=$(jq --arg comment "$COMMENT_BODY" '. | {"body": $comment}' <<< "{}")
         if [ -z "$COMMENT_ID" ]; then
-          gh pr comment ${{ github.event.pull_request.number }} -b "$COMMENT_BODY"
+          echo "COMMENT_ID is empty. Creating new comment."
+          gh pr comment 1 -b "$COMMENT_BODY"
         else
-          UPDATE_URL="https://api.github.com/repos/${{ github.repository }}/issues/comments/$COMMENT_ID"
+          UPDATE_URL="https://api.github.com/repos/tiriana/add-jira-link-to-pr/issues/comments/$COMMENT_ID"
           echo "Constructed UPDATE_URL: $UPDATE_URL"
           curl -s -H "$AUTH_HEADER" -H "Content-Type: application/json" -X PATCH -d "$JSON_PAYLOAD" $UPDATE_URL
+        fi
       shell: bash
