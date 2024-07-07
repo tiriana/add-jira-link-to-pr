@@ -58,4 +58,6 @@ runs:
           echo "Constructed UPDATE_URL: $UPDATE_URL"
           curl -s -H "$AUTH_HEADER" -H "Content-Type: application/json" -X PATCH -d "$JSON_PAYLOAD" $UPDATE_URL
         fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       shell: bash
