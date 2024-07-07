@@ -4,20 +4,22 @@ inputs:
   name:
     description: 'Name to personalize the message'
     required: true
-  time:
-    description: 'Human-readable time in HH:MM:SS format'
-    required: true
 runs:
   using: 'composite'
   steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Get current time
+      id: current-time
+      run: |
+        echo "::set-output name=current_time::$(date +"%H:%M:%S")"
+
     - name: Add Comment
       if: success()
       run: |
         NAME="${{ inputs.name }}"
-        TIME="${{ inputs.time }}"
+        TIME="${{ steps.current-time.outputs.current_time }}"
         COMMENT="Hello $NAME at $TIME!"
         COMMENTS_URL="${{ github.event.pull_request.comments_url }}"
         AUTH_HEADER="Authorization: token ${{ github.token }}"
