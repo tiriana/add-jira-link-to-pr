@@ -12,6 +12,6 @@ jobs:
   add-jira-link:
     runs-on: ubuntu-latest
     steps:
-      - uses: tiriana/add-jira-link-to-pr@v1.0.0
+      - uses: tiriana/add-jira-link-to-pr@v1
         with:
           jira-base-url: 'https://my-company-2.atlassian.net'
